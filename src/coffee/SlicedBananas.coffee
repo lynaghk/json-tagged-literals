@@ -29,6 +29,12 @@ goog.scope ->
         tag_reader val
       else
         sb.DefaultReader tag, val
+    else if goog.isArray(x)
+      x.map (v) -> sb.deserialize tag_table, v
+    else if goog.isObject(x)
+      goog.object.map x, (v, k) -> sb.deserialize tag_table, v
+    else
+      x
     
   sb.DefaultTagTable =
     inst: (x) -> new Date(Date.parse x)
