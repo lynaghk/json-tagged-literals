@@ -1,4 +1,4 @@
-goog.provide "com.keminglabs.sliced_bananas"
+goog.provide "com.keminglabs.SlicedBananas"
 
 # Lil' print function that's helpful to have during development; it'll be removed by Closure compiler if it's not used in anything exported.
 p = (x) ->
@@ -14,7 +14,7 @@ get_tag = (literal_prefix, x) ->
 
 sb = null #need CoffeeScript to define the var up here rather than within goog.scope.
 goog.scope ->
-  sb = com.keminglabs.sliced_bananas
+  sb = com.keminglabs.SlicedBananas
 
   sb.LiteralPrefix = "#"
   sb.DefaultReader = (tag, x) ->
@@ -29,7 +29,7 @@ goog.scope ->
         tag_reader val
       else
         sb.DefaultReader tag, val
-
+    
   sb.DefaultTagTable =
     inst: (x) -> new Date(Date.parse x)
 
