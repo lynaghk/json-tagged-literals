@@ -20,7 +20,6 @@ end
 
 task :compile_coffeescript do
   Guard.guards('coffeescript').run_all
-  CoffeeScriptOutput
   FileList.new("#{CoffeeScriptOutput}/**/*.js")
     .each{|path| remove_goog_scope_returns!(path)}
 end
