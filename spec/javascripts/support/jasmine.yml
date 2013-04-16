@@ -1,0 +1,15 @@
+helpers:
+  - 'helpers/**/*.js'
+spec_helper: spec/support/jasmine_helper.rb
+
+src_dir: output/
+src_files:
+  - sliced_bananas.min.js
+
+spec_dir:
+  spec/javascripts
+
+spec_files:
+  - '**/*[sS]pec.js'
+
+

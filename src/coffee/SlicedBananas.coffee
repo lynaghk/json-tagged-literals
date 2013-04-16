@@ -37,7 +37,7 @@ goog.scope ->
       x
     
   sb.DefaultTagTable =
-    inst: (x) -> new Date(Date.parse x)
+    "inst": (x) -> new Date(Date.parse x)
 
 
   # The function provided to goog.scope shouldn't return anything, but CoffeeScript will always return the last expression of a fn.

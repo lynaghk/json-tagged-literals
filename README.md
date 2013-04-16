@@ -20,3 +20,19 @@ Then run
     bundle exec rake minify 
 
 to run CoffeeScript and minify its output with the Google Closure compiler.
+
+
+## Testing
+
+Tests are written in CoffeeScript under `spec/coffeescripts`.
+
+Start the test server with
+
+    bundle exec rake jasmine
+    
+and then open up `localhost:8888` in your browser to run tests.
+If you are editing tests, make sure to run
+
+    bundle exec guard
+    
+so that the specs will automatically compile from CoffeeScript to JavaScript. 

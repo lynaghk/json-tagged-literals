@@ -39,3 +39,6 @@ task :cljs_package => [:compile_coffeescript] do
   cp "#{CoffeeScriptOutput}/SlicedBananas.js", "cljs_package/pkg/closure-js/libs/sliced-bananas"
   sh "cd cljs_package && lein jar"
 end
+
+require 'jasmine'
+load 'jasmine/tasks/jasmine.rake'
