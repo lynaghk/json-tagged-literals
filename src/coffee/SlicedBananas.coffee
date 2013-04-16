@@ -1,4 +1,5 @@
 goog.provide "com.keminglabs.SlicedBananas"
+goog.require "goog.structs.Map"
 
 # Lil' print function that's helpful to have during development; it'll be removed by Closure compiler if it's not used in anything exported.
 p = (x) ->
@@ -39,6 +40,24 @@ goog.scope ->
   sb.DefaultTagTable =
     "inst": (x) -> new Date(Date.parse x)
 
+  sb.serialize = (constructor_table, x) ->
+    klass = if x? then x.constructor else null
+    serializer = constructor_table.get(klass)
+    if serializer
+      [tag, val] = serializer(x)
+      res = {}
+      res[sb.LiteralPrefix + tag] = val
+      res
+    else if goog.isArray(x)
+      x.map (v) -> sb.serialize constructor_table, v
+    else if goog.isObject(x)
+      goog.object.map x, (v, k) -> sb.serialize constructor_table, v
+    else
+      x
+
+  sb.DefaultConstructorTable = new goog.structs.Map(
+    Date, (d) -> ["inst", d.toISOString()]
+  )
 
   # The function provided to goog.scope shouldn't return anything, but CoffeeScript will always return the last expression of a fn.
   # This return statement will be matched by a regex in the Rakefile and eliminated before it's passed to the Closure compiler.

@@ -31,6 +31,12 @@ task :minify => [:compile_coffeescript] do
          js_output_file: "#{OutputRoot}/sliced_bananas.min.js")
     .compile_files(FileList.new("vendor/closure-library/closure/goog/base.js",
                                 "vendor/closure-library/closure/goog/object/*.js",
+                                "vendor/closure-library/closure/goog/structs/*.js",
+                                "vendor/closure-library/closure/goog/iter/*.js",
+                                "vendor/closure-library/closure/goog/asserts/*.js",
+                                "vendor/closure-library/closure/goog/debug/*.js",
+                                "vendor/closure-library/closure/goog/array/*.js",
+                                "vendor/closure-library/closure/goog/string/*.js",
                                 "#{CoffeeScriptOutput}/**/*.js"))
 end
 

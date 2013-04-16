@@ -2,9 +2,21 @@
 
 An extensible tagged literal system for JSON
 
-
 This project is inspired by [EDN](https://github.com/edn-format/edn), which provides much richer data structures than JSON.
 However if you're stuck with JSON for performance or interoperability, make the best of your bad cerealization by adding sliced bananas.
+
+
+## Usage
+
+```javascript
+var x = [1, 2, {"#inst": "2013-04-05T00:00:00.000Z"}];
+var res = SlicedBananas.deserialize(SlicedBananas.DefaultTagTable, x);
+res[2].constructor === Date //=> true
+
+SlicedBananas.serialize(SlicedBananas.DefaultConstructorTable, {"aDate": new Date()})
+  //=> {aDate: {#inst: "2013-04-16T20:32:20.807Z"}}
+
+```
 
 ## Development
 
