@@ -18,7 +18,7 @@ get_tag = (literal_prefix, x) ->
 LiteralPrefix = "#"
 
 DefaultReader = (tag, x) ->
-  throw "Tag '#{tag}' not recognized"
+  throw new Error "Tag '#{tag}' not recognized"
 
 TagTable =
   "inst": (x) -> new Date(Date.parse x)
