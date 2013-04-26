@@ -10,10 +10,10 @@ However if you're stuck with JSON for performance or interoperability, make the 
 
 ```javascript
 var x = [1, 2, {"#inst": "2013-04-05T00:00:00.000Z"}];
-var res = SlicedBananas.deserialize(SlicedBananas.DefaultTagTable, x);
+var res = SlicedBananas.deserialize(x);
 res[2].constructor === Date //=> true
 
-SlicedBananas.serialize(SlicedBananas.DefaultConstructorTable, {"aDate": new Date()})
+SlicedBananas.serialize({"aDate": new Date()})
   //=> {aDate: {#inst: "2013-04-16T20:32:20.807Z"}}
 
 ```
