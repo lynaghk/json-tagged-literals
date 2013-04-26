@@ -12,14 +12,14 @@ To serialize a non-JSONable value (i.e., anything beyond a string, number, true/
 To deserialize, you provide a function that takes the JSONable representation and returns the richer type.
 
 Consider the classic problem of serializing dates.
-Sliced Bananas comes with a built-in reader for the "inst" tag with of [rfc-3339](http://www.ietf.org/rfc/rfc3339.txt) string representations of dates:
+Sliced Bananas comes with a built-in reader for the "inst" tag with the [rfc-3339](http://www.ietf.org/rfc/rfc3339.txt) string representations of dates:
 
 ```javascript
 SlicedBananas.deserialize({"#inst": "2013-04-05T00:00:00.000Z"})
   .getFullYear() //=> 2013
 ```
 
-Note that the argument to deserialize is a data structure, not a string; use `JSON.parse` to convert your JSON into data and then `SlicedBananas.deserialize` to lift that data into your application domain.
+Note that the argument to deserialize is a data structure, not a string; use `JSON.parse` to convert your JSON string into data and then `SlicedBananas.deserialize` to lift that data into your application domain.
 
 Tagged literals can occur at any (potentially nested) position in JSON data:
 
@@ -36,7 +36,34 @@ SlicedBananas.deserialize([0, 1, {"#inst": "2013-04-05T00:00:00.000Z"}], opts)
   //=> [0, 1, 2013]
 ```
 
+and tags can be nested within each other:
 
+```javaScript
+var Order = function Order() {}
+
+var opts = {
+  tag_table: {
+    order: function(x) {
+      var o = new Order();
+      o.id = x.id;
+      o.placed_on = x.placed_on;
+      return o;}}};
+
+var d = {"#order": {"id": 123, "placed_on": {"#inst": "2013-04-05T00:00:00.000Z"}}};
+var res = SlicedBananas.deserialize(d, opts);
+res.constructor == Order //=> true
+res.placed_on.getFullYear() == 2013 //=> true
+```
+
+By default, an error is thrown when an unknown tag is encountered, but that behavior can be changed by providing a default reader function:
+
+```javascript
+SlicedBananas.deserialize({"#trouble": true})
+  //=> Raises an error!
+SlicedBananas.deserialize({"#trouble": true},
+                          {default_reader: function(x){return 42;}})
+  //=> 42
+```
 
 Todo: Serialization
 
