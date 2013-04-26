@@ -32,6 +32,18 @@ describe "deserialization", ->
       default_reader: (x) -> 42
     expect(res).toEqual 42
 
+  it "can handle nested tags", ->
+    class Order
+    res = SlicedBananas.deserialize {"#order": {"id": 123, "placed_on": {"#inst": "2013-04-05T00:00:00.000Z"}}},
+      tag_table:
+        order: (x) ->
+          o = new Order()
+          o.id = x.id
+          o.placed_on = x.placed_on
+          o
+
+    expect(res.constructor).toEqual Order
+    expect(res.placed_on).toEqualDate new Date(Date.UTC(2013, 3, 5))
 
 describe "serialization", ->
   it "works at the toplevel", ->

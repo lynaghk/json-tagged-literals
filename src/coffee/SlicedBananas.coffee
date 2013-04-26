@@ -33,13 +33,17 @@ goog.scope ->
 
   sb.deserialize = (x, opts) ->
     opts or= {}
+    opts["tag_table"] or= {}
+
+    #Todo: if we add more built-in tags, use goog.object.extend here?
+    opts["tag_table"]["inst"] or= TagTable["inst"]
 
     tag = get_tag (opts["literal_prefix"] or LiteralPrefix), x
     if tag
-      tag_reader = (opts["tag_table"] or TagTable)[tag]
+      tag_reader = opts["tag_table"][tag]
       val = x[Object.keys(x)[0]]
       if tag_reader
-        tag_reader val
+        tag_reader sb.deserialize val, opts
       else
         (opts["default_reader"] or DefaultReader) tag, val
     else if goog.isArray(x)
