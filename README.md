@@ -4,6 +4,7 @@ An extensible tagged literal system for JSON
 
 This project is inspired by [EDN](https://github.com/edn-format/edn), which provides much richer data structures than JSON.
 However if you're stuck with JSON for performance or interoperability, make the best of your bad cerealization by adding sliced bananas.
+SlicedBananas was originally written to support the [Precipitron 5000]() mobile weather app.
 
 ## Install
 
