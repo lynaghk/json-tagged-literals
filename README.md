@@ -65,13 +65,19 @@ SlicedBananas.deserialize({"#trouble": true},
   //=> 42
 ```
 
-Todo: Serialization
+To convert your application values into JSONable values, you can use the `serialize` function.
+By default, only the `inst` tag is implemented:
 
 ```javascript
 SlicedBananas.serialize({"aDate": new Date()})
   //=> {aDate: {#inst: "2013-04-16T20:32:20.807Z"}}
 ```
 
+but as with the `deserialize` function you can pass a second argument options map.
+The interesting key in this options map is `constructor_table`, which should map to an instance of [goog.structs.Map](http://docs.closure-library.googlecode.com/git/class_goog_structs_Map.html) with function constructor keys and serialization function values.
+A serialization function should take your higher level type and return an array of the form `[string_tag, JSONable_value]`.
+
+Using `goog.structs.Map` is going to be painful for anyone not using the Google Closure Library, so if you have suggestions for a nicer way to implement an open polymorphic dispatch system for serialization, please let me know.
 
 For more usage examples, [see the tests](https://github.com/lynaghk/sliced-bananas/blob/master/spec/coffeescripts/sliced_bananas_spec.coffee).
 
