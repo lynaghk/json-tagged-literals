@@ -4,11 +4,12 @@ An extensible tagged literal system for JSON
 
 This project is inspired by [EDN](https://github.com/edn-format/edn), which provides much richer data structures than JSON.
 However if you're stuck with JSON for performance or interoperability, make the best of your bad cerealization by adding sliced bananas.
-SlicedBananas was originally written to support the [Precipitron 5000]() mobile weather app.
+Sliced Bananas was originally written to support the [Precipitron 5000]() mobile weather app.
 
 ## Install
 
 If you're OG, just grab `sliced_bananas.min.js` and throw it on your page.
+You now have the `SlicedBananas` object in your global scope.
 
 If you're using ClojureScript, add
 
@@ -53,7 +54,7 @@ SlicedBananas.deserialize([0, 1, {"#inst": "2013-04-05T00:00:00.000Z"}])
   .pop().getFullYear() //=> 2013
 ```
 
-Additional tags are specified as a map of tags to reader functions:
+Additional tags can be specified with a map of tags to reader functions:
 
 ```javascript
 opts = {tag_table: {inst: function(x){return new Date(Date.parse(x)).getFullYear();}}}
@@ -79,6 +80,9 @@ var res = SlicedBananas.deserialize(d, opts);
 res.constructor == Order //=> true
 res.placed_on.getFullYear() == 2013 //=> true
 ```
+
+Note here that the tagged literal value `#order` was serialized as a JSON object its body, not just a string.
+There's no need to compact several values together in a string and try to regex them back out---Sliced Bananas is built on top of JSON, so you should use whatever data shapes it provides (ordered or associative collections, scalars) to serialize your values, using Sliced Bananas to lift them into application domain objects.
 
 By default, an error is thrown when an unknown tag is encountered, but that behavior can be changed by providing a default reader function:
 
@@ -131,6 +135,12 @@ Here's an example of serializing JodaTime dates with the [Cheshire](https://gith
     ;;=> "{\"#inst\":\"2013-05-07T04:32:49.376Z\"}"
 ```
 
+## Tips
+
+If you think your application and its serverside endpoints might become popular, you should namespace your tags.
+I.e., use tags like `"com.keminglabs.precipitron5000/forecast"`.
+Now Gzip is even more your friend.
+
 ## Development
 
 You'll need Ruby and bundler to build the project.
@@ -165,3 +175,4 @@ so that the specs will automatically compile from CoffeeScript to JavaScript.
 ## Thanks
 
 Thanks to [@ninjascience](https://twitter.com/ninjascience) for design discussions and the awesome name.
+Thanks to [@fogus](https://twitter.com/fogus) for feedback on README examples and raising questions about unknown type handling.
