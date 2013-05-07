@@ -59,7 +59,7 @@ goog.scope ->
     klass = if x? then x["constructor"] else null
     serializer = (opts["constructor_table"] or ConstructorTable)?.get(klass)
     if serializer
-      [tag, val] = serializer(x)
+      [tag, val] = serializer(x, opts)
       res = {}
       res[(opts["literal_prefix"] or LiteralPrefix) + tag] = val
       res

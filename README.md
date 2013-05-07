@@ -76,6 +76,7 @@ SlicedBananas.serialize({"aDate": new Date()})
 but as with the `deserialize` function you can pass a second argument options map.
 The interesting key in this options map is `constructor_table`, which should map to an instance of [goog.structs.Map](http://docs.closure-library.googlecode.com/git/class_goog_structs_Map.html) with function constructor keys and serialization function values.
 A serialization function should take your higher level type and return an array of the form `[string_tag, JSONable_value]`.
+Your serialization functions will also be passed the options map given to `SlicedBananas.serialize` as the second argument; you can use this to recursively serialize composite types.
 
 Using `goog.structs.Map` is going to be painful for anyone not using the Google Closure Library, so if you have suggestions for a nicer way to implement an open polymorphic dispatch system for serialization, please let me know.
 
