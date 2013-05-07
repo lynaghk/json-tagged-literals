@@ -5,6 +5,30 @@ An extensible tagged literal system for JSON
 This project is inspired by [EDN](https://github.com/edn-format/edn), which provides much richer data structures than JSON.
 However if you're stuck with JSON for performance or interoperability, make the best of your bad cerealization by adding sliced bananas.
 
+## Install
+
+If you're OG, just grab `sliced_bananas.min.js` and throw it on your page.
+
+If you're using ClojureScript, add
+
+```clojure
+[com.keminglabs/sliced-bananas "0.1.0-SNAPSHOT"]
+```
+
+to your `project.clj` dependencies and then
+
+```clojure
+(:require [com.keminglabs.SlicedBananas :as sb])
+```
+
+in your namespace form.
+Note that this is a plain JavaScript library, so if you want to pass options make sure you first coerce them to a JavaScript object:
+```clojure
+(sb/deserialize my-js-obj
+                (clj->js {"tag_table" {"inst" (fn [d] ...)}}))
+```
+
+
 ## Usage
 
 This library is two pure functions, `serialize` and `deserialize`, which move values between the rich semantics of your application and the impoverished semantics of JSON.
@@ -81,6 +105,30 @@ Your serialization functions will also be passed the options map given to `Slice
 Using `goog.structs.Map` is going to be painful for anyone not using the Google Closure Library, so if you have suggestions for a nicer way to implement an open polymorphic dispatch system for serialization, please let me know.
 
 For more usage examples, [see the tests](https://github.com/lynaghk/sliced-bananas/blob/master/spec/coffeescripts/sliced_bananas_spec.coffee).
+
+## Serverside implementation
+
+Since everything is just JSON, it's fairly easy to teach your server to slice some bananas.
+Here's an example of serializing JodaTime dates with the [Cheshire](https://github.com/dakrone/cheshire) JSON library in Clojure:
+
+```clojure
+(ns ptron.server.util
+  (:require [cheshire
+             [core :as json]
+             [generate :refer [add-encoder encode-map]]]
+            [clj-time
+             [core :refer [now]]
+             [format :refer [formatters unparse]]]))
+
+(add-encoder org.joda.time.DateTime
+             (fn [x jg]
+               (encode-map {"#inst" (unparse (formatters :date-time)
+                                             x)}
+                           jg)))
+
+(json/encode (now))
+    ;;=> "{\"#inst\":\"2013-05-07T04:32:49.376Z\"}"
+```
 
 ## Development
 
