@@ -161,3 +161,7 @@ If you are editing specs, make sure to run
     bundle exec guard
     
 so that the specs will automatically compile from CoffeeScript to JavaScript. 
+
+## Thanks
+
+Thanks to [@ninjascience](https://twitter.com/ninjascience) for design discussions and the awesome name.
