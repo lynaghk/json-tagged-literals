@@ -135,6 +135,21 @@ Here's an example of serializing JodaTime dates with the [Cheshire](https://gith
     ;;=> "{\"#inst\":\"2013-05-07T04:32:49.376Z\"}"
 ```
 
+[@sbecker](https://github.com/sbecker) shows us how it's done in Rails:
+
+```ruby
+# Monkeypatch Rails time class to output json differently
+class ActiveSupport::TimeWithZone
+  def to_json
+    {"#inst" => self}.to_json
+  end
+end
+
+user.updated_at.to_json
+# => {"#inst":"2013-05-06T14:27:55-07:00"}
+```
+
+
 ## Tips
 
 If you think your application and its serverside endpoints might become popular, you should namespace your tags.
