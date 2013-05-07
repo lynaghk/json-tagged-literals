@@ -14,7 +14,7 @@ You now have the `SlicedBananas` object in your global scope.
 If you're using ClojureScript, add
 
 ```clojure
-[com.keminglabs/sliced-bananas "0.1.0-SNAPSHOT"]
+[com.keminglabs/sliced-bananas "0.1.0"]
 ```
 
 to your `project.clj` dependencies and then
