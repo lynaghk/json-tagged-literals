@@ -4,7 +4,7 @@ spec_helper: spec/support/jasmine_helper.rb
 
 src_dir: output/
 src_files:
-  - sliced_bananas.min.js
+  - jtl.min.js
 
 spec_dir:
   spec/javascripts

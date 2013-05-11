@@ -1,32 +1,30 @@
-# Sliced Bananas
-
-An extensible tagged literal system for JSON
+# JSON Tagged Literals
 
 This project is inspired by [EDN](https://github.com/edn-format/edn), which provides much richer data structures than JSON.
-However if you're stuck with JSON for performance or interoperability, make the best of your bad cerealization by adding sliced bananas.
-Sliced Bananas was originally written to support the [Precipitron 5000]() mobile weather app.
+However if you're stuck with JSON for performance or interoperability, use JTL to make the best of it.
+JTL was originally written to support the [Precipitron 5000](http://precipitron.com) mobile weather app.
 
 ## Install
 
-If you're OG, just grab `sliced_bananas.min.js` and throw it on your page.
-You now have the `SlicedBananas` object in your global scope.
+If you're OG, just grab [jtl.min.js](jtl.min.js) and throw it on your page.
+You now have the `JTL` object in your global scope.
 
 If you're using ClojureScript, add
 
 ```clojure
-[com.keminglabs/sliced-bananas "0.1.0"]
+[com.keminglabs/jtl "0.1.0"]
 ```
 
 to your `project.clj` dependencies and then
 
 ```clojure
-(:require [com.keminglabs.SlicedBananas :as sb])
+(:require [com.keminglabs.jtl :as jtl])
 ```
 
 in your namespace form.
 Note that this is a plain JavaScript library, so if you want to pass options make sure you first coerce them to a JavaScript object:
 ```clojure
-(sb/deserialize my-js-obj
+(jtl/deserialize my-js-obj
                 (clj->js {"tag_table" {"inst" (fn [d] ...)}}))
 ```
 
@@ -38,19 +36,19 @@ To serialize a non-JSONable value (i.e., anything beyond a string, number, true/
 To deserialize, you provide a function that takes the JSONable representation and returns the richer type.
 
 Consider the classic problem of serializing dates.
-Sliced Bananas comes with a built-in reader for the "inst" tag with the [rfc-3339](http://www.ietf.org/rfc/rfc3339.txt) string representations of dates:
+JTL comes with a built-in reader for the "inst" tag with the [rfc-3339](http://www.ietf.org/rfc/rfc3339.txt) string representations of dates:
 
 ```javascript
-SlicedBananas.deserialize({"#inst": "2013-04-05T00:00:00.000Z"})
+JTL.deserialize({"#inst": "2013-04-05T00:00:00.000Z"})
   .getFullYear() //=> 2013
 ```
 
-Note that the argument to deserialize is a data structure, not a string; use `JSON.parse` to convert your JSON string into data and then `SlicedBananas.deserialize` to lift that data into your application domain.
+Note that the argument to deserialize is a data structure, not a string; use `JSON.parse` to convert your JSON string into data and then `JTL.deserialize` to lift that data into your application domain.
 
 Tagged literals can occur at any (potentially nested) position in JSON data:
 
 ```javascript
-SlicedBananas.deserialize([0, 1, {"#inst": "2013-04-05T00:00:00.000Z"}])
+JTL.deserialize([0, 1, {"#inst": "2013-04-05T00:00:00.000Z"}])
   .pop().getFullYear() //=> 2013
 ```
 
@@ -58,7 +56,7 @@ Additional tags can be specified with a map of tags to reader functions:
 
 ```javascript
 opts = {tag_table: {inst: function(x){return new Date(Date.parse(x)).getFullYear();}}}
-SlicedBananas.deserialize([0, 1, {"#inst": "2013-04-05T00:00:00.000Z"}], opts)
+JTL.deserialize([0, 1, {"#inst": "2013-04-05T00:00:00.000Z"}], opts)
   //=> [0, 1, 2013]
 ```
 
@@ -76,20 +74,20 @@ var opts = {
       return o;}}};
 
 var d = {"#order": {"id": 123, "placed_on": {"#inst": "2013-04-05T00:00:00.000Z"}}};
-var res = SlicedBananas.deserialize(d, opts);
+var res = JTL.deserialize(d, opts);
 res.constructor == Order //=> true
 res.placed_on.getFullYear() == 2013 //=> true
 ```
 
 Note here that the tagged literal value `#order` was serialized as a JSON object its body, not just a string.
-There's no need to compact several values together in a string and try to regex them back out---Sliced Bananas is built on top of JSON, so you should use whatever data shapes it provides (ordered or associative collections, scalars) to serialize your values, using Sliced Bananas to lift them into application domain objects.
+There's no need to compact several values together in a string and try to regex them back out---tagged literal values are just JSON, so you should use the appropriate data shapes (ordered or associative collections, scalars) to serialize your values, using JTL to lift them into application domain objects.
 
 By default, an error is thrown when an unknown tag is encountered, but that behavior can be changed by providing a default reader function:
 
 ```javascript
-SlicedBananas.deserialize({"#trouble": true})
+JTL.deserialize({"#trouble": true})
   //=> Raises an error!
-SlicedBananas.deserialize({"#trouble": true},
+JTL.deserialize({"#trouble": true},
                           {default_reader: function(x){return 42;}})
   //=> 42
 ```
@@ -98,22 +96,22 @@ To convert your application values into JSONable values, you can use the `serial
 By default, only the `inst` tag is implemented:
 
 ```javascript
-SlicedBananas.serialize({"aDate": new Date()})
+JTL.serialize({"aDate": new Date()})
   //=> {aDate: {#inst: "2013-04-16T20:32:20.807Z"}}
 ```
 
 but as with the `deserialize` function you can pass a second argument options map.
 The interesting key in this options map is `constructor_table`, which should map to an instance of [goog.structs.Map](http://docs.closure-library.googlecode.com/git/class_goog_structs_Map.html) with function constructor keys and serialization function values.
 A serialization function should take your higher level type and return an array of the form `[string_tag, JSONable_value]`.
-Your serialization functions will also be passed the options map given to `SlicedBananas.serialize` as the second argument; you can use this to recursively serialize composite types.
+Your serialization functions will also be passed the options map given to `JTL.serialize` as the second argument; you can use this to recursively serialize composite types.
 
 Using `goog.structs.Map` is going to be painful for anyone not using the Google Closure Library, so if you have suggestions for a nicer way to implement an open polymorphic dispatch system for serialization, please let me know.
 
-For more usage examples, [see the tests](https://github.com/lynaghk/sliced-bananas/blob/master/spec/coffeescripts/sliced_bananas_spec.coffee).
+For more usage examples, [see the tests](https://github.com/lynaghk/jtl/blob/master/spec/coffeescripts/jtl_spec.coffee).
 
 ## Serverside implementation
 
-Since everything is just JSON, it's fairly easy to teach your server to slice some bananas.
+Since everything is just JSON, it's fairly easy to teach your server to emit tagged literals
 Here's an example of serializing JodaTime dates with the [Cheshire](https://github.com/dakrone/cheshire) JSON library in Clojure:
 
 ```clojure
@@ -189,5 +187,5 @@ so that the specs will automatically compile from CoffeeScript to JavaScript.
 
 ## Thanks
 
-Thanks to [@ninjascience](https://twitter.com/ninjascience) for design discussions and the awesome name.
+Thanks to [@ninjascience](https://twitter.com/ninjascience) for design discussions.
 Thanks to [@fogus](https://twitter.com/fogus) for feedback on README examples and raising questions about unknown type handling.

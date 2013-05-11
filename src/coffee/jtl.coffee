@@ -1,4 +1,4 @@
-goog.provide "com.keminglabs.SlicedBananas"
+goog.provide "com.keminglabs.jtl"
 goog.require "goog.structs.Map"
 goog.require "goog.object"
 
@@ -27,11 +27,11 @@ ConstructorTable = new goog.structs.Map(
   Date, (d) -> ["inst", d.toISOString()]
 )
 
-sb = null #need CoffeeScript to define the var up here rather than within goog.scope.
+JTL = null #need CoffeeScript to define the var up here rather than within goog.scope.
 goog.scope ->
-  sb = com.keminglabs.SlicedBananas
+  JTL = com.keminglabs.jtl
 
-  sb.deserialize = (x, opts) ->
+  JTL.deserialize = (x, opts) ->
     opts or= {}
     opts["tag_table"] or= {}
 
@@ -43,17 +43,17 @@ goog.scope ->
       tag_reader = opts["tag_table"][tag]
       val = x[Object.keys(x)[0]]
       if tag_reader
-        tag_reader sb.deserialize val, opts
+        tag_reader JTL.deserialize val, opts
       else
         (opts["default_reader"] or DefaultReader) tag, val
     else if goog.isArray(x)
-      x.map (v) -> sb.deserialize v, opts
+      x.map (v) -> JTL.deserialize v, opts
     else if goog.isObject(x)
-      goog.object.map x, (v, k) -> sb.deserialize v, opts
+      goog.object.map x, (v, k) -> JTL.deserialize v, opts
     else
       x
     
-  sb.serialize = (x, opts) ->
+  JTL.serialize = (x, opts) ->
     opts or= {}
 
     klass = if x? then x["constructor"] else null
@@ -64,9 +64,9 @@ goog.scope ->
       res[(opts["literal_prefix"] or LiteralPrefix) + tag] = val
       res
     else if goog.isArray(x)
-      x.map (v) -> sb.serialize v, opts
+      x.map (v) -> JTL.serialize v, opts
     else if goog.isObject(x)
-      goog.object.map x, (v, k) -> sb.serialize v, opts
+      goog.object.map x, (v, k) -> JTL.serialize v, opts
     else
       x
   

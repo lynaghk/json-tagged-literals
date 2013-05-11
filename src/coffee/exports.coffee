@@ -1,5 +1,5 @@
-goog.require "com.keminglabs.SlicedBananas"
+goog.require "com.keminglabs.jtl"
 
-window["SlicedBananas"] =
-  "deserialize": com.keminglabs.SlicedBananas.deserialize
-  "serialize": com.keminglabs.SlicedBananas.serialize
+window["JTL"] =
+  "deserialize": com.keminglabs.jtl.deserialize
+  "serialize": com.keminglabs.jtl.serialize

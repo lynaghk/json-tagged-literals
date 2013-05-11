@@ -28,7 +28,7 @@ task :minify => [:compile_coffeescript] do
   Closure::Compiler
     .new(compilation_level: 'ADVANCED_OPTIMIZATIONS',
          manage_closure_dependencies: true,
-         js_output_file: "#{OutputRoot}/sliced_bananas.min.js")
+         js_output_file: "#{OutputRoot}/jtl.min.js")
     .compile_files(FileList.new("vendor/closure-library/closure/goog/base.js",
                                 "vendor/closure-library/closure/goog/object/*.js",
                                 "vendor/closure-library/closure/goog/structs/*.js",
@@ -41,8 +41,8 @@ task :minify => [:compile_coffeescript] do
 end
 
 task :cljs_package => [:compile_coffeescript] do
-  FileUtils.mkdir_p "cljs_package/pkg/closure-js/libs/sliced-bananas"
-  cp "#{CoffeeScriptOutput}/SlicedBananas.js", "cljs_package/pkg/closure-js/libs/sliced-bananas"
+  FileUtils.mkdir_p "cljs_package/pkg/closure-js/libs/jtl"
+  cp "#{CoffeeScriptOutput}/jtl.js", "cljs_package/pkg/closure-js/libs/jtl"
   sh "cd cljs_package && lein jar"
 end
 
