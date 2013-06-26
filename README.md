@@ -2,7 +2,7 @@
 
 This project is inspired by [EDN](https://github.com/edn-format/edn), which provides much richer data structures than JSON.
 However if you're stuck with JSON for performance or interoperability, use JTL to make the best of it.
-JTL was originally written to support the [Precipitron 5000](http://precipitron.com) mobile weather app.
+JTL was originally written to support [The Weathertron](http://theweathertron.com) mobile weather app.
 
 ## Install
 
